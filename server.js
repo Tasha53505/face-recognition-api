@@ -1,7 +1,8 @@
 const express = require('express');
-
 const app = express();
 
+
+app.use(express.json());
 const database = {
     users: [{
             id: '123',
@@ -23,31 +24,42 @@ const database = {
     ]
 }
 
-// Testing
+// Testing ---------------------
 app.get('/', (req, res) => {
-    res.send('This is working')
-})
+        res.send('This is working')
+    })
+    // -----------------------
 
-// Signing in -----------
+
+
+
+// ------------- Signing in-----------
 app.post('/signin', (req, res) => {
-    if (req.body.email === database.users[0].email &&
-        req.body.password === database.users[0].password) {
-        res.json('Success');
-    } else {
-        res.status(400).json('Error logging in,')
-    }
+        if (req.body.email === database.users[0].email &&
+            req.body.password === database.users[0].password) {
+            res.json('Success');
+        } else {
+            res.status(400).json('Error logging in,')
+        }
+
+    })
+    // ----------Registering--------------------
+
+app.post('/regisiter', (req, res) => {
+    req.body
 
 })
 
-// tessst
 
+
+// -------------------------
 
 
 // Listening to port 3000
 app.listen(3000, () => {
-    console.log("this is runnning on port 3000")
-})
-
+        console.log("this is runnning on port 3000 and is working with no")
+    })
+    // ------------------------
 
 /*
 
@@ -56,5 +68,8 @@ app.listen(3000, () => {
 /register --> POST = user
 /profile/:userId --> GET = user
 /image --> PUT = user
+
+When sending data to the front-end using JSON, we need to remember to 
+parse it cause express doesn't kmow what we sent over
 
 */
