@@ -1,13 +1,16 @@
 const express = require('express');
 const app = express();
 var bcrypt = require('bcryptjs');
+const cors = require('cors')
 
 
 app.use(express.json());
+app.use(cors());
 const database = {
     users: [{
             id: '123',
             name: "John",
+            password: "cookies",
             email: "john@gmail.com",
             entries: 0,
             joined: new Date()
@@ -15,6 +18,7 @@ const database = {
         {
             id: '124',
             name: "Sally",
+            password: "bananas",
             email: "sally@gmail.com",
             entries: 0,
             joined: new Date()
@@ -46,7 +50,6 @@ app.post('/signin', (req, res) => {
             console.log("2nd guess", res)
                 // res === false
         });
-
         // As of bcryptjs 2.4.0, compare returns a promise if callback is omitted:
         bcrypt.compare("B4c0/\/", "$2a$08$7zYYa1iOPgbejN1WDLbbzOPJVpEQZHkQqUNk0q6gNdXnDWGGlHvaa").then((res) => {
             // res === true
@@ -56,9 +59,8 @@ app.post('/signin', (req, res) => {
             req.body.password === database.users[0].password) {
             res.json('Success');
         } else {
-            res.status(400).json('Error logging in,')
+            res.status(400).json('Error logging in')
         }
-
     })
     // ----------Registering--------------------
 
@@ -132,9 +134,9 @@ app.put('/image', (req, res) => {
 
 
 
-// ------------ Listening to port 3000-------
-app.listen(3000, () => {
-        console.log("this is runnning on port 3000 and is working with no errors... hopefully.")
+// ------------ Listening to port 8000-------
+app.listen(8000, () => {
+        console.log("this is runnning on port 8000 and is working with no errors... hopefully.")
     })
     // ------------------------
 
