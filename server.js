@@ -13,7 +13,7 @@ const database = {
             joined: new Date()
         },
         {
-            id: '1234',
+            id: '124',
             name: "Sally",
             email: "sally@gmail.com",
             password: "bananas",
@@ -61,12 +61,27 @@ app.post('/register', (req, res) => {
     // --------------Profile---------------------
 
 app.get('/profile/:id', (req, res) => {
-    const { id } = req.params;
+        const { id } = req.params;
+        let found = false;
+        database.users.forEach(user => {
+            if (user.id === id) {
+                found = true;
+                return res.json(user);
+            }
+        })
+        if (!found) {
+            res.status(400).json("Not found..");
+        }
+    })
+    // ---------------Image----------
+app.put('/image', (req, res) => {
+    const { id } = req.body;
     let found = false;
     database.users.forEach(user => {
         if (user.id === id) {
             found = true;
-            return res.json(user);
+            user.entries++
+                return res.json(user.entries);
         }
     })
     if (!found) {
@@ -77,11 +92,9 @@ app.get('/profile/:id', (req, res) => {
 
 
 
-// -------------------------------
-
-// Listening to port 3000
+// ------------ Listening to port 3000-------
 app.listen(3000, () => {
-        console.log("this is runnning on port 3000 and is working with no")
+        console.log("this is runnning on port 3000 and is working with no errors... hopefully.")
     })
     // ------------------------
 
