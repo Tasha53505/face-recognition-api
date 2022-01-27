@@ -1,5 +1,6 @@
 const express = require('express');
 const app = express();
+var bcrypt = require('bcryptjs');
 
 
 app.use(express.json());
@@ -8,7 +9,6 @@ const database = {
             id: '123',
             name: "John",
             email: "john@gmail.com",
-            password: "hitman",
             entries: 0,
             joined: new Date()
         },
@@ -16,12 +16,16 @@ const database = {
             id: '124',
             name: "Sally",
             email: "sally@gmail.com",
-            password: "bananas",
             entries: 0,
             joined: new Date()
         }
 
-    ]
+    ],
+    login: [{
+        id: '987',
+        hash: '',
+        email: "john@gmail.com"
+    }]
 }
 
 // Testing ---------------------
@@ -35,6 +39,19 @@ app.get('/', (req, res) => {
 
 // ------------- Signing in-----------
 app.post('/signin', (req, res) => {
+        bcrypt.compare("apples", "$2a$08$7zYYa1iOPgbejN1WDLbbzOPJVpEQZHkQqUNk0q6gNdXnDWGGlHvaa", function(err, res) {
+            console.log("First guess", res)
+        });
+        bcrypt.compare("wrongOne", "$2a$08$7zYYa1iOPgbejN1WDLbbzOPJVpEQZHkQqUNk0q6gNdXnDWGGlHvaa", function(err, res) {
+            console.log("2nd guess", res)
+                // res === false
+        });
+
+        // As of bcryptjs 2.4.0, compare returns a promise if callback is omitted:
+        bcrypt.compare("B4c0/\/", "$2a$08$7zYYa1iOPgbejN1WDLbbzOPJVpEQZHkQqUNk0q6gNdXnDWGGlHvaa").then((res) => {
+            // res === true
+        });
+
         if (req.body.email === database.users[0].email &&
             req.body.password === database.users[0].password) {
             res.json('Success');
@@ -75,20 +92,43 @@ app.get('/profile/:id', (req, res) => {
     })
     // ---------------Image----------
 app.put('/image', (req, res) => {
-    const { id } = req.body;
-    let found = false;
-    database.users.forEach(user => {
-        if (user.id === id) {
-            found = true;
-            user.entries++
-                return res.json(user.entries);
+        const { id } = req.body;
+        let found = false;
+        database.users.forEach(user => {
+            if (user.id === id) {
+                found = true;
+                user.entries++
+                    return res.json(user.entries);
+            }
+        })
+        if (!found) {
+            res.status(400).json("Not found..");
         }
     })
-    if (!found) {
-        res.status(400).json("Not found..");
-    }
-})
+    // ------------------------
 
+// bcrypt.hash(password, 8, function(err, hash) {
+//     console.log(hash)
+// });
+
+// bcrypt.genSalt(10, function(err, salt) {
+//     bcrypt.hash("B4c0/\/", salt, function(err, hash) {
+//         // Store hash in your password DB.
+//     });
+// });
+
+// // Load hash from your password DB.
+// bcrypt.compare("B4c0/\/", hash, function(err, res) {
+//     // res === true
+// });
+// bcrypt.compare("not_bacon", hash, function(err, res) {
+//     // res === false
+// });
+
+// // As of bcryptjs 2.4.0, compare returns a promise if callback is omitted:
+// bcrypt.compare("B4c0/\/", hash).then((res) => {
+//     // res === true
+// });
 
 
 
