@@ -62,6 +62,7 @@ app.post('/signin', (req, res) => {
             res.status(400).json('Error logging in')
         }
     })
+    // Test
     // ----------Registering--------------------
 
 app.post('/register', (req, res) => {
