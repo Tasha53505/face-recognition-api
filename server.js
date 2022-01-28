@@ -16,12 +16,12 @@ const database = {
             joined: new Date()
         },
         {
-            id: '124',
-            name: "Sally",
-            password: "bananas",
-            email: "sally@gmail.com",
+            id: '',
+            name: "",
+            password: "",
+            email: "",
             entries: 0,
-            joined: new Date()
+            joined: ''
         }
 
     ],
@@ -43,17 +43,6 @@ app.get('/', (req, res) => {
 
 // ------------- Signing in-----------
 app.post('/signin', (req, res) => {
-        bcrypt.compare("apples", "$2a$08$7zYYa1iOPgbejN1WDLbbzOPJVpEQZHkQqUNk0q6gNdXnDWGGlHvaa", function(err, res) {
-            console.log("First guess", res)
-        });
-        bcrypt.compare("wrongOne", "$2a$08$7zYYa1iOPgbejN1WDLbbzOPJVpEQZHkQqUNk0q6gNdXnDWGGlHvaa", function(err, res) {
-            console.log("2nd guess", res)
-                // res === false
-        });
-        // As of bcryptjs 2.4.0, compare returns a promise if callback is omitted:
-        bcrypt.compare("B4c0/\/", "$2a$08$7zYYa1iOPgbejN1WDLbbzOPJVpEQZHkQqUNk0q6gNdXnDWGGlHvaa").then((res) => {
-            // res === true
-        });
 
         if (req.body.email === database.users[0].email &&
             req.body.password === database.users[0].password) {
@@ -66,7 +55,6 @@ app.post('/signin', (req, res) => {
     // ----------Registering--------------------
 
 app.post('/register', (req, res) => {
-        const { email, name, password } = req.body;
         database.users.push({
                 id: '125',
                 name: name,
