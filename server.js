@@ -47,7 +47,7 @@ app.post('/signin', (req, res) => {
             req.body.password === database.users[0].password) {
             res.json(database.users[0]);
         } else {
-            res.status(400).json('Error logging in')
+            res.status(400).json('Error logging in, line 50 on server.js')
         }
     })
     //
