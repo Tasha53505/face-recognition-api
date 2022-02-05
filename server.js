@@ -1,11 +1,24 @@
 const express = require('express');
 const app = express();
 // var bcrypt = require('bcryptjs');
-const cors = require('cors')
+const cors = require('cors');
+const knex = require('knex')
 
+knex({
+    client: 'pg',
+    connection: {
+        host: '127.0.0.1',
+        port: 5432,
+        user: 'tasha',
+        password: '',
+        database: 'face-recognition-ai'
+    }
+});
 
 app.use(express.json());
 app.use(cors());
+
+
 const database = {
     users: [{
             id: '123',
@@ -93,7 +106,11 @@ app.put('/image', (req, res) => {
         })
         if (!found) {
             res.status(400).json("Not found..");
+
+
         }
+
+
     })
     // ------------------------
 
