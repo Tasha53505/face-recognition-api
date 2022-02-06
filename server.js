@@ -4,15 +4,20 @@ const app = express();
 const cors = require('cors');
 const knex = require('knex')
 
-knex({
+const db = knex({
     client: 'pg',
     connection: {
         host: '127.0.0.1',
-        port: 5432,
-        user: 'tasha',
-        password: '',
+        port: 3000,
+        user: 'postgres',
+        password: 'Crumpet63',
         database: 'face-recognition-ai'
     }
+});
+
+
+db.on('error', e => {
+    console.error('DB error', e);
 });
 
 app.use(express.json());
@@ -68,13 +73,11 @@ app.post('/signin', (req, res) => {
 
 app.post('/register', (req, res) => {
         const { name, email } = req.body
-        database.users.push({
-                id: '125',
-                name: name,
+        db('users').insert({
                 email: email,
-                entries: 0,
-                joined: new Date()
-            })
+                name: name,
+                joined: new Date(),
+            }).then(console.log)
             // This grabs the last user.
         res.json(database.users[database.users.length - 1])
     })
@@ -106,7 +109,6 @@ app.put('/image', (req, res) => {
         })
         if (!found) {
             res.status(400).json("Not found..");
-
 
         }
 
