@@ -17,6 +17,7 @@
         "pg": "^8.7.3"
     },
     "devDependencies": {
+        "@types/pg": "^8.6.4",
         "nodemon": "^2.0.15"
     }
 }
