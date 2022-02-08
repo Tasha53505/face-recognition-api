@@ -20,33 +20,7 @@ app.use(express.json());
 app.use(cors());
 
 
-const database = {
-    users: [{
-            id: '123',
-            name: "John",
-            password: "cookies",
-            email: "john@gmail.com",
-            entries: 0,
-            joined: new Date()
-        },
-        {
-            id: '',
-            name: "",
-            password: "",
-            email: "",
-            entries: 0,
-            joined: ''
-        }
-
-    ],
-    login: [{
-        id: '987',
-        hash: '',
-        email: "john@gmail.com"
-    }]
-}
-
-// Testing ---------------------
+// Testing NOT USED---------------------
 app.get('/', (req, res) => {
         res.send(database.users);
     })
@@ -57,12 +31,23 @@ app.get('/', (req, res) => {
 
 // ------------- Signing in-----------
 app.post('/signin', (req, res) => {
-    if (req.body.email === database.users[0].email &&
-        req.body.password === database.users[0].password) {
-        res.json(database.users[0]);
-    } else {
-        res.status(400).json('Error logging in, line 50 on server.js')
-    }
+    db.select('email', 'hash').from('login')
+        .where('email', '=', req.body.email)
+        .then(data => {
+            const isValid = bcrypt.compareSync(req.body.password, data[0].hash);
+            if (isValid) {
+                return db.select('*').from('users')
+                    .where('email', '=', req.body.email)
+                    .then(user => {
+                        res.json(user[0])
+                    })
+                    .catch(err => res.status(400).json('unable to get user'))
+            } else {
+                res.status(400).json('Wrong credentials')
+
+            }
+        })
+        .catch(err => res.status(400).json('wrong credentials'))
 })
 
 // ----------Registering--------------------
@@ -92,6 +77,7 @@ app.post('/register', (req, res) => {
                             res.json(user[0])
                         })
                         .then(trx.commit)
+                        .catch(trx.rollback)
                 })
         })
 
@@ -126,6 +112,9 @@ app.put('/image', (req, res) => {
                 res.json(entries[0]);
             })
             .catch(err => res.status(400).json("can't get entries"))
+            .then(count => {
+                this.setState(Object.assign(this.state.user, count))
+            })
     })
     // ------------------------
 
