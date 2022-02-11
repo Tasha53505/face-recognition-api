@@ -47,8 +47,8 @@ app.post('/imageurl', (req, res) => { image.handleApiCall(req, res) })
 
 
 // ------------ Listening to port 8000-------
-app.listen(8000, () => {
-        console.log("this is runnning on port 8000 and is working with no errors... hopefully.")
+app.listen(process.env.PORT || 8000, () => {
+        console.log(`App is running on port ${process.env.PORT}`)
     })
     // ------------------------
 
