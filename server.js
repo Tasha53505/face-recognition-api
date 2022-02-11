@@ -14,9 +14,10 @@ const db = knex({
     client: 'pg',
     connection: {
         host: 'postgresql-fitted-76115',
-        user: 'postgres',
-        password: 'Crumpet63',
-        database: 'face-recognition-ai'
+        connectionString: process.env.DATABASE_URL,
+        ssl: {
+            rejectUnauthorized: false
+        }
     }
 });
 
